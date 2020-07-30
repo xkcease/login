@@ -1,0 +1,142 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <link href="css/bootstrap.min.css" type="text/css" rel="stylesheet"/>
+    <link href="css/layout.css" type="text/css" rel="stylesheet"/>
+    <link href="css/mutual.css" type="text/css" rel="stylesheet"/>
+    <link href="css/login.css" type="text/css" rel="stylesheet"/>
+
+    <title>登录</title>
+</head>
+
+<body>
+    <div id="wrapper">
+        <header id="header">
+            <nav class="navbar navbar-expand navbar-light justify-content-between">
+                <a class="navbar-brand ml-5"  href="login">Monitor</a>
+                
+            </nav>
+        </header>
+        
+        <div class="container py-5 my-5">
+            <div class="row">
+                <div class="col-6 offset-1">
+                    <div class="login-picture">
+                        <div class="login-text mt-3">
+                            <h1 class="text-primary text-monospace">此</h1>
+                            <p class="text-monospace">南浦凄凄别</p>
+                            <p class="text-monospace">西风袅袅秋</p>
+                            <p class="text-monospace">一看肠一断</p>
+                            <p class="text-monospace">好去莫回头</p>
+                            <p class="text-monospace">————白居易·《南浦别》</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-4 ml-3 mt-2">
+                    <div class="border border-secondary rounded">
+                        <div id="login-form" class="p-4 my-2">
+                            <form method="post">
+                                <div class="form-group mb-2">
+                                    <input type="text" class="form-control" id="username" name="username" autocomplete="off" placeholder="用户名"/>
+                                    <div id="username-tips" class="tips">
+                                        <p class="error-text"></p>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <input type="password" class="form-control" id="password" name="password" autocomplete="off" placeholder="密码"/>
+                                    <div id="password-tips" class="tips">
+                                        <p class="error-text"></p>
+                                    </div>
+                                </div>
+                                <input type="submit" class="btn btn-primary btn-block" value="登录"/>
+                                <div class="text-right mt-3">
+                                    <a class="link mr-2" href="register">注册</a>
+                                    <a class="link" href="forget">忘记密码?</a>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        
+        <footer id="footer">
+            <div class="text-center">
+                <a class="link mr-5" href="help.html">帮助</a>
+                <a class="link" href="#about" data-toggle="modal">关于本站</a>
+            </div>
+            <div class="modal fade" id="about">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">关于本站</h5>
+                            <button class="close" type="button" data-dismiss="modal">
+                                <span>&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <p><span class="text-muted">Hello</span></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+
+    <script type="text/javascript" src="js/jquery-3.4.1.min.js"></script>
+    <script type="text/javascript" src="js/bootstrap.bundle.min.js"></script>
+
+    <script type="text/javascript">
+
+        $('input:last').on('click', function(){
+            console.log('sumbit start');
+
+            $('input').removeClass('error-input');
+            $('.error-text').removeClass('show');
+
+            $.ajax({
+                type: 'post',
+                url: 'login',
+                contentType: 'application/json',
+                dataType: 'json',
+                data: JSON.stringify({
+                    username: $('input')[0].value, 
+                    password: $('input')[1].value
+                }),
+                success: function(dataJson){
+                    if(dataJson.state === true){
+                        window.location.href = 'success';
+                        console.log('login success');
+                    }
+                    else{
+                        if(dataJson.errorIndex === 0){              // 用户不存在
+                            $('#username-tips p').text(dataJson.errorText);
+                            $('#username-tips p').addClass('show');
+                            $('#username').addClass('error-input');
+                        }
+                        else if(dataJson.errorIndex === 1){          // 密码错误
+                            $('#password-tips p').text(dataJson.errorText);
+                            $('#password-tips p').addClass('show');
+                            $('#password').addClass('error-input');
+                        }
+                    }
+                },
+                error: function(){
+                    console.log('response error');
+                }
+            });
+
+            console.log('submit end');
+            return false;
+        });
+
+    </script>
+
+</body>
+
+
+</html>

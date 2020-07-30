@@ -1,0 +1,37 @@
+
+.error-input{
+    border:1px solid #f66495;
+}
+
+.error-text{
+    display: none;
+    color: #f66495;
+}
+
+.show{
+    display: block;
+}
+
+.tips{
+    height: 25px;
+}
+
+.link{
+    font-size: 0.85rem;
+    color: #00a1d6;
+    text-decoration: none;
+}
+
+.dropdown-menu{
+    min-width: 0.9rem;
+}
+
+.menu-link{
+    font-size: 0.65rem;
+    color: #00a1d6;
+    text-decoration: none;
+    padding: 0.25rem 0.9rem;
+    text-align: center;
+}
+
+

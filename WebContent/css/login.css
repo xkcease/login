@@ -1,0 +1,14 @@
+
+  .login-picture{
+    height: 400px;
+    background-image: url('../img/bg.jpg');
+    background-size: 350px;
+    background-repeat: no-repeat;
+    background-position: right bottom;
+}
+
+.login-text{
+    padding-top: 10px;
+}
+
+

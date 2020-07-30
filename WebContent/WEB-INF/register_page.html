@@ -1,0 +1,160 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+
+    <meta charset="utf-8">
+    <link href="css/bootstrap.min.css" type="text/css" rel="stylesheet"/>
+    <link href="css/layout.css" type="text/css" rel="stylesheet"/>
+    <link href="css/mutual.css" type="text/css" rel="stylesheet"/>
+    
+    <title>注册</title>
+
+</head>
+
+
+<body>
+    <div id="wrapper">
+        <header id="header">
+            <nav class="navbar navbar-expand navbar-light justify-content-between">
+                <a class="navbar-brand ml-5"  href="login">Monitor</a>
+                <a class="link" href="login">返回首页</a>
+            </nav>
+        </header>
+
+        <div class="container mt-5">
+            <div class="row  justify-content-center">
+                <div class="col-5 mt-5">
+                    <div class="">
+                        <form method="POST">
+                            <div class="form-group form-row">
+                                <label class="col-2 col-form-label text-right" for="username">用户名</label>
+                                <input type="text" id="username" class="col-10 form-control" name="username" placeholder="请输入用户名（长度2-15）" autocomplete="off"/>
+                                <div id="username-tips" class="tips col-10 offset-2">
+                                    <p class="error-text"></p>
+                                </div>
+                            </div>
+                            <div class="form-group form-row">
+                                <label class="col-2 col-form-label text-right" for="password">密码</label>
+                                <input type="password" class="col-10 form-control" id="password" name="password" placeholder="请输入密码（长度5-20 任意数字或字母）" autocomplete="off"/>
+                                <div id="password-tips" class="tips  col-10 offset-2">
+                                    <p class="error-text"></p>
+                                </div>
+                            </div>
+                            <div class="form-group form-row">
+                                <label class="col-2 col-form-label text-right" for="password-again">确认密码</label>
+                                <input type="password" class="col-10 form-control" id="password-again" name="password_again" placeholder="请再次输入密码" autocomplete="off"/>
+                                <div id="password-again-tips" class="tips  col-10 offset-2">
+                                    <p class="error-text"></p>
+                                </div>
+                            </div>
+                            <div class="form-group form-row mb-2">
+                                <label class="col-2 col-form-label text-right" for="phone">手机号</label>
+                                <input type="text" id="phone" class="col-10 form-control" name="phone" placeholder="用于密码找回" autocomplete="off"/>
+                                <div id="phone-tips" class="tips col-10 offset-2">
+                                    <p class="error-text"></p>
+                                </div>
+                            </div>
+                            <div class="form-row mb-3">
+                                <div class="form-check form-check-inline col-10 offset-2">
+                                    <input type="checkbox" id="agree" class="form-check-input" autocomplete="off"/>
+                                    <label class="form-check-label" for="agree">我已同意<a class="link" href="#">《协议》</a></label>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <input type="submit" class="btn btn-primary btn-block col-10 offset-2" value="注册" />
+                            </div>
+                            <div class="form-row text-right mt-2">
+                                <a class="link col-10 offset-2" href="login">已有账号，直接登录</a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <footer id="footer">
+            <div class="text-center">
+                <a class="link mr-5" href="help.html">帮助</a>
+                <a class="link" href="#about" data-toggle="modal">关于本站</a>
+            </div>
+            <div class="modal fade" id="about">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">关于本站</h5>
+                            <button class="close" type="button" data-dismiss="modal">
+                                <span>&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <p><span class="text-muted">Hello</span></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </footer>
+   
+    </div>
+
+    <script type="text/javascript" src="js/jquery-3.4.1.min.js"></script>
+    <script type="text/javascript" src="js/bootstrap.bundle.min.js"></script>
+    <script type="text/javascript" src="js/judge.js"></script>
+
+    <script type="text/javascript">
+        
+        $('input:last').on('click', function(){
+            console.log('submit start');
+
+            $('input').removeClass('error-input');
+            $('.error-text').removeClass('show');
+
+            if(!judge()){                   // 表单校验
+                console.log('judge error');
+                return false;
+            }
+
+            $.ajax({
+                type: 'post',
+                url: 'register',
+                contentType: 'application/json',
+                dataType: 'json',
+                data: JSON.stringify({
+                    username: $('input')[0].value,
+                    password: $('input')[1].value,
+                    phone: $('input')[3].value
+                }),
+                success: function (dataJson){
+                    if(dataJson.state === true){
+                        window.location.href = 'login';
+                        console.log(dataJson);
+                    }
+                    else{
+                        if(dataJson.errorIndex === 0){          // 用户已存在
+                           $('#username-tips p').text(dataJson.errorText);
+                           $('#username-tips p').addClass('show');
+                           $('#username').addClass('error-input');
+                        }  
+                        else if(dataJson.errorIndex === 3){     // 手机号已注册
+                            $('#phone-tips p').text(dataJson.errorText);
+                            $('#phone-tips p').addClass('show');
+                            $('#phone').addClass('error-input');
+                        }
+                    }
+                },
+                error: function(){
+                    console.log('response error')
+                }
+            });
+            console.log('submit end');
+            return false;
+        });
+
+    </script>
+
+    
+
+</body>
+
+
+</html>
